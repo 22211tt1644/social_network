@@ -1,0 +1,268 @@
+{% extends "base/base.html" %}
+
+{% block title %}
+<title>Dashboard</title>
+{% endblock %}
+
+{% block styles %}
+
+{% endblock %}
+
+
+
+{% block content %}
+<div>
+    <p class="home">Dành cho bạn</p>
+    <div class="main-container">
+        {% if user.is_authenticated %}
+        <div class="input-container">
+            <div class="profile">
+                <a href="{% url 'show_profile_page' user.id %}" style="text-decoration:none;">
+                    <img src="{{user_profile.avatar.url}}" alt="profile-1" class="avatar">
+                </a>
+            </div>
+            <input type="text" placeholder="Có gì mới?" readonly onclick="openPopup()" class="input-box">
+            <button class="post-btn" onclick="openPopup()">Đăng</button>
+            <!-- Popup thêm thread mới -->
+            <div id="popup" class="popup-overlay">
+                <div class="popup-content">
+                    <div class="popup-header">
+                        <button onclick="closePopup()" class="close-btn">Hủy</button>
+                        <b>Thread mới</b>
+                        <p></p>
+                    </div>
+                    <hr class="hr">
+                    <form method="POST" enctype="multipart/form-data" action="{% url 'add_post' %}">
+                        {% csrf_token %}
+                        <div class="popup-body">
+                            <div class="user-info">
+                                <a href="{% url 'show_profile_page' user.profile.id %}" style="text-decoration:none;">
+                                    <img src="{{ user_profile.avatar.url }}" alt="profile-1" class="avatar">
+                                </a>
+                                <strong>{{user_profile.username}}</strong>
+                            </div>
+                        
+                            <input type="text" id="title" name="title" class="input-box" placeholder="Có gì mới?" onchange="validateForm()">
+                            <div class="file-upload">
+                                <input type="file" name="image" id="file-input" class="input-file" onchange="previewImage(event); validateForm()">
+                                <label for="file-input" class="upload-icon">
+                                    <i class="bx bx-images"></i>
+                                </label>
+
+                            </div>
+                            <!-- Hiển thị ảnh đã chọn (preview) -->
+                            <div id="image-preview-container">
+                                <img id="image-preview" src="" alt="" class="photo">
+                            </div>
+                            {% if post.image %}
+                                <a href="{{ post.image.url }}">
+                                    <img src="{{ post.image.url }}" alt="feed-1" class="photo" >
+                                </a>
+                            {% endif %}
+                        </div>
+                        <div class="popup-footer">
+                            <p class="comment-info">Bất kỳ ai cũng có thể trả lời và trích dẫn</p>
+                            <button class="post-btn" type="submit" id="submit-btn" disabled>Đăng</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <hr class="hr">
+        {% endif %}
+        <!-- Thêm các bài đăng khác tại đây -->
+        {% for post in all_posts reversed %}
+        {% if post.shared_from %}
+        <!-- Đây là bài viết chia sẻ -->
+        <div class="content-box">
+            <div class="header">
+                <a href="{% url 'show_profile_page' post.author.id %}" style="text-decoration:none;">
+                    <img src="{{post.get_owner_pp}}" alt="profile-1" class="avatar">
+                </a>
+            </div>
+            <div class="content">
+                <span class="post-author">
+                    <b>{{ post.author }} <i class="post-time">{{ post.post_date |date:"d/m/Y H:i:A" }}</i> </b>
+                    {% if  post.author.id == user.profile.id %}
+                    <i class='bx bx-dots-horizontal-rounded post-icon post-them' onclick="togglePopupChinhsua(event, {{post.id}})"></i>
+                    <!-- Popup để chỉnh sửa và xóa bài đăng -->
+                    <div class="popup-chinhsua" id="popup-chinhsua-{{ post.id }}" data-post-id="{{ post.id }}">
+                        <div class="popup-chinhsua-content">
+                            <a href="#" class="popup-chinhsua-item delete" onclick="openDeletePopup({{ post.id }})">Xóa bài <i class='bx bxs-trash post-icon'></i></a>
+                        </div>
+                    </div>
+                    <!-- Popup xác nhận xóa -->
+                    <div id="deleteConfirmationPopup" class="delete-popup">
+                        <div class="popup-content-delete">
+                            <div class="tt-luachon">
+                                <p><b>Xóa bài viết?</b></p>
+                                <p>Nếu xóa bài viết này bạn sẽ không thể khôi phục được nữa</p>
+                            </div>
+                            <div class="luachon">
+                                <a class="button-chon" onclick="closeDeletePopup()">Không</a>
+                                <a class="button-chon" onclick="confirmDelete()"><b>Có</b></a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </span>
+                <span> đã chia sẻ bài viết:</span>
+                <div class="content-box box-share">
+                    <div class="header">
+                        <a href="{% url 'show_profile_page' post.shared_from.author.id %}" style="text-decoration:none;">
+                            <img src="{{post.shared_from.get_owner_pp}}" alt="profile-1" class="avatar">
+                        </a>
+                    </div>
+                    <div class="content">
+                        <span class="post-author">
+                            <b>{{ post.shared_from.author }} <i class="post-time">{{ post.shared_from.post_date |date:"d/m/Y H:i:A" }}</i> </b>
+                        </span>
+                        <a href="{% url 'post_detail' post.id %}" class="link-ct">
+                            <span id="post-title-{{ post.shared_from.id }}" class="post-title">{{ post.shared_from.title }}</span>
+                            {% if post.shared_from.image %}
+                            <img id="post-image-{{ post.shared_from.id }}" src="{{ post.shared_from.image.url }}" alt="feed-1" class="photo">
+                            {% else %}
+                            {% endif %}
+                        </a>
+                    </div>
+                </div>
+                <div class="actions">
+                    <form action="{% url 'like_post' post.id %}" class="post-tt" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ request.path }}">
+                        <button class='tym'>
+                            <i class='bx bx-heart post-icon' id="heart"></i>
+                            <span>{{ post.likes.all.count }}</span>
+                        </button>
+                    </form>
+                    <a class="post-tt" href="{% url 'post_detail' post.id %}">
+                        <i class='bx bx-message-rounded-minus post-icon'></i>
+                        {{ post.total_comments }}
+                    </a>
+                    {% if post.image %}
+                    <a class="post-tt" href="{{post.image.url}}" class="flex items-center space-x-2 flex-1 justify-end" style="text-decoration: none;" download>
+                        <i class='bx bx-cloud-download post-icon'></i>
+                    </a>
+                    {% else %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <hr class="hr">
+        {% else %}
+        <div class="content-box">
+            <div class="header">
+                <a href="{% url 'show_profile_page' post.author.id %}" style="text-decoration:none;">
+                    <img src="{{post.get_owner_pp}}" alt="profile-1" class="avatar">
+                </a>
+            </div>
+            <div class="content">
+                <span class="post-author">
+                    <b>{{ post.author }} <i class="post-time">{{ post.post_date |date:"d/m/Y H:i:A" }}</i> </b>
+                    {% if  post.author.id == user.profile.id %}
+                    <i class='bx bx-dots-horizontal-rounded post-icon post-them' onclick="togglePopupChinhsua(event, {{post.id}})"></i>
+                    <!-- Popup để chỉnh sửa và xóa bài đăng -->
+                    <div class="popup-chinhsua" id="popup-chinhsua-{{ post.id }}" data-post-id="{{ post.id }}">
+                        <div class="popup-chinhsua-content">
+                            <a href="#" class="popup-chinhsua-item" onclick="openUpdatePopup({{ post.id }})">Chỉnh sửa <i class='bx bx-edit-alt post-icon'></i></a>
+                            <hr>
+                            <a href="#" class="popup-chinhsua-item delete" onclick="openDeletePopup({{ post.id }})">Xóa bài <i class='bx bxs-trash post-icon'></i></a>
+                        </div>
+                    </div>
+                    <!-- Popup xác nhận xóa -->
+                    <div id="deleteConfirmationPopup" class="delete-popup">
+                        <div class="popup-content-delete">
+                            <div class="tt-luachon">
+                                <p><b>Xóa bài viết?</b></p>
+                                <p>Nếu xóa bài viết này bạn sẽ không thể khôi phục được nữa</p>
+                            </div>
+                            <div class="luachon">
+                                <a class="button-chon" onclick="closeDeletePopup()">Không</a>
+                                <a class="button-chon" onclick="confirmDelete()"><b>Có</b></a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Popup Chỉnh sửa-->
+                    <div id="popupUpdate" class="popup-update">
+                        <div class="popup-content">
+                            <div class="popup-header">
+                                <button onclick="closeUpdatePopup()" class="close-btn">Hủy</button>
+                                <b>Chỉnh sửa Threads</b>
+                                <p></p>
+                            </div>
+                            <hr class="hr">
+                            <form method="POST" id="updateForm" enctype="multipart/form-data" action="{% url 'update_post' post.id %}">
+                                {% csrf_token %}
+                                <div class="popup-body">
+                                    <div class="user-info">
+                                        <a href="{% url 'show_profile_page' user.profile.id %}" style="text-decoration:none;">
+                                            <img src="{{ user_profile.avatar.url }}" alt="profile-1" class="avatar">
+                                        </a>
+                                        <strong>{{user_profile.username}}</strong>
+                                    </div>
+
+                                    <input type="text" id="title-update" name="title" class="input-box">
+                                    <div class="file-upload">
+                                        <input type="file" name="image" id="image" class="input-file" onchange="previewImageUpdate(event)">
+                                        <label for="image" class="upload-icon">
+                                            <i class="bx bx-images"></i>
+                                        </label>
+                                    </div>
+                                    <!-- Hiển thị ảnh đã chọn (preview) -->
+                                    {% if post.image %}
+                                    <div id="old-image-preview">
+                                        <img id="image-update-old" src="" alt="" class="photo">
+                                    </div>
+                                    {% endif %}
+                                    <div id="image-preview-container">
+                                        <img id="new-image-preview" src="" alt="" class="photo">
+                                    </div>
+                                </div>
+                                <div class="popup-footer">
+                                    <p class="comment-info">Bất kỳ ai cũng có thể trả lời và trích dẫn</p>
+                                    <button class="post-btn" type="submit" id="submit-btn">Xong</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    {% endif %}
+                </span>
+                <a href="{% url 'post_detail' post.id %}" class="link-ct">
+                    <span id="post-title-{{ post.id }}" class="post-title">{{ post.title }}</span>
+                    {% if post.image %}
+                    <img id="post-image-{{ post.id }}" src="{{ post.image.url }}" alt="feed-1" class="photo">
+                    {% else %}
+                </a>
+                {% endif %}
+                <div class="actions">
+                    <form action="{% url 'like_post' post.id %}" class="post-tt" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ request.path }}">
+                        <button class='tym'>
+                            <i class='bx bx-heart post-icon' id="heart"></i>
+                            <span>{{ post.likes.all.count }}</span>
+                        </button>
+                    </form>
+                    <a class="post-tt" href="{% url 'post_detail' post.id %}">
+                        <i class='bx bx-message-rounded-minus post-icon'></i>
+                        {{ post.total_comments }}
+                    </a>
+                    <a class="post-tt" href="{% url 'share_post' post.id %}">
+                        <i class='bx bx-share post-icon'></i>
+                    </a>
+                    {% if post.image %}
+                    <a class="post-tt" href="{{post.image.url}}" class="flex items-center space-x-2 flex-1 justify-end" style="text-decoration: none;" download>
+                        <i class='bx bx-cloud-download post-icon'></i>
+                    </a>
+                    {% else %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <hr class="hr">
+
+        {% endif %}
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

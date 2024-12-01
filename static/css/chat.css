@@ -1,0 +1,198 @@
+.chat {
+    width: 100%;
+    padding: 8px;
+    border-radius: 10px;
+    border: 1px solid #3E3F3F;
+    background: #181818;
+    color: white;
+}
+
+.form-chat {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.send-button {
+    background: none;
+    border: none;
+    color: #777777;
+    font-size: 2em; /* Kích thước icon */
+    cursor: pointer;
+}
+.send-button:hover {
+    color: white; /* Màu khi hover */
+}
+
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    max-width: 600px;
+    margin: auto;
+}
+
+.message {
+    max-width: 70%;
+    padding: 10px;
+    border-radius: 15px;
+    margin: 5px 0;
+    position: relative;
+    
+}
+
+.message-content {
+    padding: 8px;
+    border-radius: 10px;
+    max-width: 80%; /* Đảm bảo tin nhắn không quá rộng */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    border: 1px solid white;
+
+}
+
+.sent {
+    background-color: white; /* Màu xanh nhạt */
+    align-self: flex-end;
+    text-align: right;
+    color: black
+}
+
+.received {
+    background-color: none;
+    align-self: flex-start;
+    text-align: left;
+    color: white;
+}
+
+.message p {
+    margin: 0;
+}
+
+.timestamp {
+    font-size: 0.8em;
+    color: #888;
+    display: flex;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%; 
+    margin-left: -15px;
+}
+
+
+.message-row {
+    display: flex;
+    margin-bottom: 10px;
+    max-width: 80%;
+    padding: 8px;
+}
+
+.message-list {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.message-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.notification {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+}
+
+.form-chat-reply {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-left: -15px;
+}
+
+.bl-chat {
+    margin-left: 15px;
+}
+
+.chat-bl {
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.bl {
+    margin-left: 50px;
+}
+
+.noti-time {
+    text-align: left;
+}
+
+.group-add {
+    display: flex;
+    align-items: center;
+    
+}
+
+.custom-select {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background: none;
+    font-size: 16px;
+    color: white;
+    appearance: none;
+    overflow-y: auto;
+    min-height: 100px;
+}
+
+.custom-select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    outline: none;
+}
+
+.black {
+    margin-top: 10px;
+}
+
+.left {
+    display: flex;
+    text-align: left;
+}
+
+.red {
+    color: red;
+}
+
+.group-popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.popup-content-popup {
+    background-color: #101010;
+    padding: 20px;
+    border-radius: 15px;
+    width: 450px;
+    position: relative;
+    border: 1px #3E3F3F solid;
+}

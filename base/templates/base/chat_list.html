@@ -1,0 +1,42 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/chat.css' %}" >
+{% endblock %}
+
+{% block title %}
+    <title>Message</title>
+{% endblock %}
+
+{% block content %} 
+<div class="home">
+    <p>
+        Tin nhắn
+    </p>
+    <div class="main-container">
+        <div class="message-list">
+            <div class="message-item">
+                <a href="{% url 'list_groups' %}" class="link-ct">
+                    <span>Nhóm</span>
+                </a>
+            </div>
+            <hr class="hr">
+            {% for friend in friends %}
+                <div class="message-item">
+                    <a href="{% url 'chat_view' friend.id %}" class="link-ct">
+                        <div class="friend-info">
+                            <img src="{{ friend.profile.avatar.url }}" alt="" class="avatar">
+                            {% if friend.profile.full_name %}
+                                <span>{{ friend.profile.full_name }}</span>
+                            {% else %}
+                            <span>{{ friend.username }}</span>
+                            {% endif %}
+                        </div>
+                    </a>
+                </div>
+                <hr>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

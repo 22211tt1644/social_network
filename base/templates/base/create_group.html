@@ -1,0 +1,40 @@
+
+
+{% extends "base/base.html" %}
+{% load static %}
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/chat.css' %}" >
+{% endblock %}
+
+{% block title %}
+    <title>Message</title>
+{% endblock %}
+
+{% block content %} 
+<div class="home">
+    <p>
+        Tạo nhóm
+    </p>
+    <div class="main-container">
+        <form method="POST" class="form-chat" enctype="multipart/form-data">
+        <div class="chat-container">
+            
+        </div>
+            
+            {% csrf_token %}
+            <div>
+                <input type="file" name="image" id="image" accept="image/*" style="display: none;">
+                <label for="image" class="upload-icon">
+                    <i class="bx bx-images"></i>
+                </label>
+            </div>
+            
+            
+            <input type="text" name="name" placeholder="Tên nhóm" required class="chat"></input>
+            <button type="submit" class="send-button">
+                <i class='bx bx-navigation'></i>
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

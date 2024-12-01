@@ -1,0 +1,50 @@
+<!-- {% extends 'main.html' %} -->
+{% load static %} 
+{% block styles %}
+<!-- Replace {name} with the respective css file -->
+<link rel="stylesheet" href="{% static 'css/signup.scss' %}" />
+{% endblock %}
+
+{% block content %} 
+<div class="container" id="container">
+
+<div class="form-container sign-in-container">
+    <form method="POST">
+        {% csrf_token %}
+        <h1 style="color:rgb(107,76,230)" style="position:relative;bottom:15px;">Reset Password</h1>
+        <input type="text" name="otp" id="otp" placeholder="Nhập mã OTP" value="{{ request.POST.otp }}">
+        <div class="error">
+            {% for error in form.otp.errors %}
+                {{ error }}
+            {% endfor %}
+        </div>
+        <br>
+        <input type="password" name="new_password" id="new_password" placeholder="Nhập mật khẩu mới" value="{{ request.POST.new_password }}">
+        <br>
+        <input type="password" name="confirm_password" id="confirm_password" placeholder="Xác nhận mật khẩu mới" value="{{ request.POST.confirm_password }}">
+        <br>
+        <button>Send</button>
+    </form>
+
+</div>
+<div class="overlay-container">
+    <div class="overlay">
+        <div class="overlay-panel overlay-left">
+            <h1>Welcome Back User!</h1>
+            <p>Login to stay connected</p>
+            <button class="ghost" id="signIn">Sign In</button>
+        </div>
+        <div class="overlay-panel overlay-right">
+            <h1>Already a User?</h1>
+            <p>Enter your personal details to Sign In</p>
+            <button class="ghost" id="'signUp">
+              <a href="{% url 'login' %}" style="text-decoration:none;color:#fff;">
+                Login
+                </a>
+            </button>
+        </div>
+    </div>
+</div>
+</div>
+
+{% endblock %}

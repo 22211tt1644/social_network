@@ -1,0 +1,75 @@
+/* Styles of login page needs to be written here */
+.sub-text{
+    font-weight: 600;
+    font-size: 45px;
+    justify-content: center;
+    text-align: center;
+    color: #5161ce;
+}
+
+body{
+    color:#5161ce;
+}
+
+.btn{
+    width: 100%;
+}
+
+.hover01 {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+    -webkit-transition: 0.3s ease-in-out;
+    transition: 0.3s ease-in-out;
+  }
+  
+.hover01:hover {
+    -webkit-transform: scale(1.01);
+    transform: scale(1.01);
+}
+
+.under-text{
+    color: #5161ce;
+ }
+
+ .signup{
+    padding-top: 20px;
+}
+
+.card{
+    margin-bottom: 40px;
+    position: absolute;
+    right: 50px;
+}
+
+.delete-acc-popup {
+    display: none;
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); 
+    display: none; 
+    align-items: center; 
+    justify-content: center; 
+    border: 1px solid #3E3F3F;
+    z-index: 1000; 
+}
+
+.popup-content-acc {
+    background-color: #181818;
+    border-radius: 20px; 
+    text-align: center;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    width: 300px;   
+    border: 1px solid #3E3F3F;
+    max-width: 100%;  
+}
+
+
+
+
+
+
+
+

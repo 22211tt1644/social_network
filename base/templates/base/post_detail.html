@@ -1,0 +1,305 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block title %}
+<title>Dashboard</title>
+{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'css/chat.css' %}">
+{% endblock %}
+
+
+
+{% block content %}
+<div>
+    <p class="home">Dành cho bạn</p>
+    <div class="main-container">
+
+        {% if post.shared_from %}
+        <!-- Đây là bài viết chia sẻ -->
+        <div class="content-box">
+            <div class="header bl-chat">
+                <a href="{% url 'show_profile_page' post.author.id %}" style="text-decoration:none;">
+                    <img src="{{post.get_owner_pp}}" alt="profile-1" class="avatar">
+                </a>
+            </div>
+            <div class="content">
+                <span class="post-author">
+                    <b>{{ post.author }} <i class="post-time">{{ post.post_date |date:"d/m/Y H:i:A" }}</i> </b>
+                    {% if  post.author.id == user.profile.id %}
+                    <i class='bx bx-dots-horizontal-rounded post-icon post-them' onclick="togglePopupChinhsua(event, {{post.id}})"></i>
+                    <!-- Popup để chỉnh sửa và xóa bài đăng -->
+                    <div class="popup-chinhsua" id="popup-chinhsua-{{ post.id }}" data-post-id="{{ post.id }}">
+                        <div class="popup-chinhsua-content">
+                            <a href="#" class="popup-chinhsua-item delete" onclick="openDeletePopup({{ post.id }})">Xóa bài <i class='bx bxs-trash post-icon'></i></a>
+                        </div>
+                    </div>
+                    <!-- Popup xác nhận xóa -->
+                    <div id="deleteConfirmationPopup" class="delete-popup">
+                        <div class="popup-content-delete">
+                            <div class="tt-luachon">
+                                <p><b>Xóa bài viết?</b></p>
+                                <p>Nếu xóa bài viết này bạn sẽ không thể khôi phục được nữa</p>
+                            </div>
+                            <div class="luachon">
+                                <a class="button-chon" onclick="closeDeletePopup()">Không</a>
+                                <a class="button-chon" onclick="confirmDelete()"><b>Có</b></a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </span>
+                <span> đã chia sẻ bài viết:</span>
+                <div class="content-box box-share">
+                    <div class="header">
+                        <a href="{% url 'show_profile_page' post.shared_from.author.id %}" style="text-decoration:none;">
+                            <img src="{{post.shared_from.get_owner_pp}}" alt="profile-1" class="avatar bl-chat">
+                        </a>
+                    </div>
+                    <div class="content">
+                        <span class="post-author">
+                            <b>{{ post.shared_from.author }} <i class="post-time">{{ post.shared_from.post_date |date:"d/m/Y H:i:A" }}</i> </b>
+                        </span>
+                        <span id="post-title-{{ post.shared_from.id }}" class="post-title">{{ post.shared_from.title }}</span>
+                        {% if post.shared_from.image %}
+                        <a href="{{ post.shared_from.image.url }}">
+                            <img id="post-image-{{ post.shared_from.id }}" src="{{ post.shared_from.image.url }}" alt="feed-1" class="photo">
+                        </a>
+                        {% else %}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="actions">
+                    <a href="{% url 'like_post' post.id %}" class="post-tt">
+                        <i class='bx bx-heart post-icon' id="heart"></i>
+
+                        <span class="like-count">{{post.likepost_set.count}}</span>
+
+                    </a>
+                    <a class="post-tt" href="#">
+                        <i class='bx bx-message-rounded-minus post-icon'></i>
+                        {{ comment_count }}
+                    </a>
+                    <a class="post-tt" href="{% url 'share_post' post.id %}">
+                        <i class='bx bx-share post-icon'></i>
+                    </a>
+                    {% if post.image %}
+                    <a class="post-tt" href="{{post.image.url}}" class="flex items-center space-x-2 flex-1 justify-end" style="text-decoration: none;" download>
+                        <i class='bx bx-cloud-download post-icon'></i>
+                    </a>
+                    {% else %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="content-box">
+            <div class="header">
+                <a href="{% url 'show_profile_page' post.author.id %}" style="text-decoration:none;">
+                    <img src="{{post.get_owner_pp}}" alt="profile-1" class="avatar bl-chat">
+                </a>
+            </div>
+            <div class="content">
+                <span class="post-author">
+                    <b>{{ post.author }} <i class="post-time">{{ post.post_date |date:"d/m/Y H:i:A" }}</i> </b>
+                    {% if  post.author.id == user.profile.id %}
+                    <i class='bx bx-dots-horizontal-rounded post-icon post-them' onclick="togglePopupChinhsua(event, {{post.id}})"></i>
+                    <!-- Popup để chỉnh sửa và xóa bài đăng -->
+                    <div class="popup-chinhsua" id="popup-chinhsua-{{ post.id }}" data-post-id="{{ post.id }}">
+                        <div class="popup-chinhsua-content">
+                            <a href="#" class="popup-chinhsua-item" onclick="openUpdatePopup({{ post.id }})">Chỉnh sửa <i class='bx bx-edit-alt post-icon'></i></a>
+                            <hr>
+                            <a href="#" class="popup-chinhsua-item delete" onclick="openDeletePopup({{ post.id }})">Xóa bài <i class='bx bxs-trash post-icon'></i></a>
+                        </div>
+                    </div>
+                    <!-- Popup xác nhận xóa -->
+                    <div id="deleteConfirmationPopup" class="delete-popup">
+                        <div class="popup-content-delete">
+                            <div class="tt-luachon">
+                                <p><b>Xóa bài viết?</b></p>
+                                <p>Nếu xóa bài viết này bạn sẽ không thể khôi phục được nữa</p>
+                            </div>
+                            <div class="luachon">
+                                <a class="button-chon" onclick="closeDeletePopup()">Không</a>
+                                <a class="button-chon" onclick="confirmDelete()"><b>Có</b></a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Popup Chỉnh sửa-->
+                    <div id="popupUpdate" class="popup-update">
+                        <div class="popup-content">
+                            <div class="popup-header">
+                                <button onclick="closeUpdatePopup()" class="close-btn">Hủy</button>
+                                <b>Chỉnh sửa Threads</b>
+                                <p></p>
+                            </div>
+                            <hr class="hr">
+                            <form method="POST" id="updateForm" enctype="multipart/form-data" action="{% url 'update_post' post.id %}">
+                                {% csrf_token %}
+                                <div class="popup-body">
+                                    <div class="user-info">
+                                        <a href="{% url 'show_profile_page' user.profile.id %}" style="text-decoration:none;">
+                                            <img src="{{ user_profile.avatar.url }}" alt="profile-1" class="avatar">
+                                        </a>
+                                        <strong>{{user_profile.username}}</strong>
+                                    </div>
+
+                                    <input type="text" id="title-update" name="title" class="input-box">
+                                    <div class="file-upload">
+                                        <input type="file" name="image" id="image" class="input-file" onchange="previewImageUpdate(event)">
+                                        <label for="image" class="upload-icon">
+                                            <i class="bx bx-images"></i>
+                                        </label>
+                                    </div>
+                                    <!-- Hiển thị ảnh đã chọn (preview) -->
+                                    {% if post.image %}
+                                    <div id="old-image-preview">
+                                        <img id="image-update-old" src="" alt="" class="photo">
+                                    </div>
+                                    {% endif %}
+                                    <div id="image-preview-container">
+                                        <img id="new-image-preview" src="" alt="" class="photo">
+                                    </div>
+                                </div>
+                                <div class="popup-footer">
+                                    <p class="comment-info">Bất kỳ ai cũng có thể trả lời và trích dẫn</p>
+                                    <button class="post-btn" type="submit" id="submit-btn">Xong</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    {% endif %}
+                </span>
+                <a href="{% url 'post_detail' post.id %}" class="link-ct">
+                    <span id="post-title-{{ post.id }}" class="post-title">{{ post.title }}</span>
+                    {% if post.image %}
+                    <img id="post-image-{{ post.id }}" src="{{ post.image.url }}" alt="feed-1" class="photo">
+                    {% else %}
+                </a>
+                {% endif %}
+                <div class="actions">
+                    <form action="{% url 'like_post' post.id %}" class="post-tt" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ request.path }}">
+                        <button class='tym'>
+                            <i class='bx bx-heart post-icon' id="heart"></i>
+                            <span>{{ post.likes.all.count }}</span>
+                        </button>
+                    </form>
+                    <a class="post-tt" href="{% url 'post_detail' post.id %}">
+                        <i class='bx bx-message-rounded-minus post-icon'></i>
+                    </a>
+                    <a class="post-tt" href="{% url 'share_post' post.id %}">
+                        <i class='bx bx-share post-icon'></i>
+                    </a>
+                    {% if post.image %}
+                    <a class="post-tt" href="{{post.image.url}}" class="flex items-center space-x-2 flex-1 justify-end" style="text-decoration: none;" download>
+                        <i class='bx bx-cloud-download post-icon'></i>
+                    </a>
+                    {% else %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        {% endif %}
+        <hr class="hr">
+        <h4>Bình luận</h4>
+
+        <ul>
+            {% for comment in comments %}
+            <li>
+                <div class="content-box chat-bl">
+                    <div class="header bl-chat">
+                        <a href="{% url 'show_profile_page' comment.user.id %}" style="text-decoration:none;">
+                            <img src="{{comment.user.profile.avatar.url}}" alt="profile-1" class="avatar">
+                        </a>
+                    </div>
+                    <div class="content">
+                        <span class="post-author">
+                            <b>{{ comment.user.username }}<i class="post-time">{{ comment.created_at }}</i></b>
+                        </span>
+                        <span>{{ comment.content }}
+                            <div class="actions form-comment">
+                            <a href="#" class="bl post-tt" onclick="toggleReplyForm({{ comment.id }})"><i class='bx bx-share '></i></a>
+                                <form action="{% url 'like_comment' comment.id %}" class="post-tt" method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="next" value="{{ request.path }}">
+                                    <button class='tym'>
+                                        {% if user in comment.likes.all %}
+                                            <i class='bx bxs-heart' id="heart-{{ comment.id }}"></i>
+                                        {% else %}
+                                            <i class='bx bx-heart' id="heart-{{ comment.id }}"></i>
+                                        {% endif %}
+                                        <span>{{ comment.likes_count }}</span>
+                                    </button>
+                                </form>
+                                <a href="{% url 'delete_comment' comment.id %}" class="post-tt"><i class='bx bxs-trash'></i></a>
+                            </div>
+                        </span>
+                        <!-- Hiển thị trả lời -->
+                        <ul>
+                            {% for reply in comment.replies.all %}
+                            <li>
+                                <div class="content-box chat-bl">
+                                    <div class="header bl-chat">
+                                        <a href="{% url 'show_profile_page' reply.user.id %}" style="text-decoration:none;">
+                                            <img src="{{reply.user.profile.avatar.url}}" alt="profile-1" class="avatar ">
+                                        </a>
+                                    </div>
+                                    <div class="content">
+                                        <span class="post-author">
+                                            <b>{{ reply.user.username }}<i class="post-time">{{ reply.created_at }}</i></b>
+                                        </span>
+                                        <span>{{ reply.content }}
+                                            <div class="actions form-comment">
+                                            <a href="#" class="bl post-tt" onclick="toggleReplyForm({{ comment.id }})"><i class='bx bx-share '></i></a>
+                                                <form action="{% url 'like_comment' comment.id %}" class="post-tt" method="POST">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="next" value="{{ request.path }}">
+                                                    <button class='tym'>
+                                                        {% if user in comment.likes.all %}
+                                                        <i class='bx bxs-heart' id="heart"></i>
+                                                        {% else %}
+                                                        <i class='bx bx-heart' id="heart"></i>
+                                                        {% endif %}
+                                                        <span>{{ comment.likes_count }}</span>
+                                                    </button>
+                                                </form>
+                                                <a href="{% url 'delete_comment' comment.id %}" class="post-tt"><i class='bx bxs-trash'></i></a>
+                                            </div>
+                                        </span>
+                                    </div>
+                                </div>
+                            <li>
+                            {% endfor %}
+                        </ul>
+
+                        <div>
+
+                            <!-- Form trả lời -->
+                            <form method="POST" id="reply-form-{{ comment.id }}" style="display:none;" class="form-chat-reply">
+                                {% csrf_token %}
+                                <input name="content" class="chat" value="">
+                                <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                                <button type="submit" class="send-button"><i class='bx bx-navigation'></i></button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <hr>
+            {% endfor %}
+        </ul>
+
+        <form method="POST" class="form-chat">
+            {% csrf_token %}
+            <input class="chat" name="content">
+            <button type="submit" class="send-button">
+                <i class='bx bx-navigation'></i>
+            </button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

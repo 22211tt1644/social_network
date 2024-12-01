@@ -1,0 +1,76 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/chat.css' %}" >
+{% endblock %}
+
+{% block title %}
+    <title>Notifications</title>
+{% endblock %}
+
+{% block content %} 
+<div class="home">
+    <p>
+        Thông báo
+    </p>
+    <div class="main-container">
+        {% if notifications %}
+            <div>
+                {% for notification in notifications %}
+                    <div class="notification">
+                        <div class="notification-avatar">
+                            <a href="{% url 'show_profile_page' notification.sender.profile.user.id %}" style="text-decoration:none;">
+                            <!-- Hiển thị ảnh đại diện của người gửi -->
+                                <img src="{{ notification.sender.profile.avatar.url }}" alt="" class="avatar">
+                            </a>
+                        </div>
+                        <div class="notification-content">
+                            {% if notification.notification_type == 'like' %}
+                                <span><b>{{ notification.sender.username }}</b> đã thích bài viết của bạn.</span>
+                            {% endif %}
+                            
+                            {% if notification.notification_type == 'comment' %}
+                            <span><b>{{ notification.sender.username }}</b> đã bình luận vào bài viết của bạn: 
+                                <a href="{% url 'post_detail' notification.post.id %}" class="link-ct">
+                                    <b>{{ notification.post.title }}</b>
+                                </a>
+                            </span>
+                            {% elif notification.notification_type == 'reply' %}
+                            <span><b>{{ notification.sender.username }}</b> đã trả lời bình luận của bạn: 
+                                <a href="{% url 'post_detail' notification.post.id %}#comment-{{ notification.comment.id }}" class="link-ct">
+                                    {{ notification.comment.content }}</span>
+                                </a>
+                            {% endif %}
+
+                            {% if notification.notification_type == 'add' %}
+                            <span><b>{{ notification.sender.username }}</b> đã gửi lời mời kết bạn.</span>
+                            {% endif %}
+
+                            {% if notification.notification_type == 'friend' %}
+                            <span><b>{{ notification.sender.username }}</b> chấp nhận lời mời kết bạn của bạn.</span>
+                            {% endif %}
+                                    
+                            {% if notification.notification_type == 'follow' %}
+                                <span><b>{{ notification.sender.username }}</b> đã theo dõi bạn.</span>
+                            {% endif %}
+
+                        </div>
+                    </div>
+                    <div class="noti-time">
+                    <i class="post-time">{{ notification.created_at|date:"d/m/Y H:i" }}</i>
+                    {% if not notification.is_read %}
+                    {% endif %}
+                    <a href="{% url 'mark_notification_as_read' notification.id %}" style="color:green;">Đánh dấu là đã đọc</a>
+                    </div>
+                    <hr class ="hr">
+                {% endfor %}
+                <a href="{% url 'delete_all_notifications' %}" style="color:red;">Xóa tất cả thông báo</a>
+            </ul>
+        {% else %}
+        <br>
+            <p>Không có thông báo nào.</p>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

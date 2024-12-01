@@ -1,0 +1,52 @@
+
+
+
+{% extends "base/base.html" %}
+{% load static %}
+{% block styles %}
+<link rel="stylesheet" href="{% static 'css/chat.css' %}" >
+<link rel="stylesheet" href="{% static 'css/profile.css' %}" >
+{% endblock %}
+
+{% block title %}
+<title>Message</title>
+{% endblock %}
+
+{% block content %} 
+<div class="home">
+    <p>
+        Mời bạn bè vào nhóm {{ group.name }}
+    </p>
+</form>
+<div class="main-container">
+    <form method="POST">
+        {% csrf_token %}
+        <label for="user_id">Chọn bạn bè để mời vào nhóm:</label>
+        <select name="user_ids" id="user_ids" multiple class="custom-select">
+            {% for friend in friends %}
+            <option value="{{ friend.id }}">
+                    <img src="{{friend.profile.avatar.url}}" alt="profile-1" class="avatar">
+                    <span>{{ friend.profile.full_name }}</span>
+                    <hr>
+                </option>
+            {% endfor %}
+        </select>
+        <br>
+        <h4>Danh sách thành viên:</h4>
+        {% for member in group.members.all %}
+        <div class=" content-box">
+            <div class="header ">
+                <a href="{% url 'show_profile_page' member.user.id %}" style="text-decoration:none;">
+                    <img src="{{member.user.profile.avatar.url}}" alt="profile-1" class="avatar bl-chat">
+                </a>
+            </div>
+            <div class="content friend-list left">
+                <span>{{ member.user.profile.full_name }}</span>
+            </div>
+        </div>
+        <hr>
+        {% endfor %}
+        <button type="submit" class="btn-update black">Xong</button>
+    </form>
+</div>
+{% endblock %}

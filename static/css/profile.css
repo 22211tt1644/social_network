@@ -1,0 +1,238 @@
+.avatar-profile {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-left: 10px;
+    vertical-align: middle;
+    gap: 10px;
+}
+
+.avatar-update {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-left: 10px;
+    vertical-align: middle;
+    gap: 0px; 
+    cursor: pointer;
+}
+
+.information {
+    margin-top: 30px;
+}
+
+.info-profile {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.update-profile {
+    display: flex;
+    margin-top: 20px;
+    width: 100%;
+    padding: 5px;
+    border-radius: 10px;
+    border: 1px #3E3F3F solid;
+    justify-content: center;
+    cursor: pointer;
+    color: white;
+
+}
+
+.friend-profile {
+    display: flex;
+    margin-top: 20px;
+    width: 100%;
+    padding: 5px;
+    border-radius: 10px;
+    border: 1px #3E3F3F solid;
+    justify-content: center;
+    color: black;
+    background: white;
+
+}
+
+.update-pro {
+    background: #101010;
+    padding: 8px;
+    width: 100%;
+    color: white;
+    border: none;
+    border-bottom: 1px solid #3E3F3F;
+    margin-bottom: 10px;
+}
+
+/*Update */
+.popup-profile {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+/* Kiểu dáng cho nội dung popup */
+.popup-content-profile {
+    background-color: #101010;
+    padding: 20px;
+    border-radius: 15px;
+    width: 450px;
+    position: relative;
+    border: 1px #3E3F3F solid;
+}
+
+.name-and-avatar{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px;
+}
+
+.blue {
+    color: #1797ea;
+}
+
+.btn-update {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+    border-radius: 15px;
+}
+
+.full-name {
+    width: 100%;    
+}
+
+.follow-link {
+    color: #777777;
+}
+
+.add-follow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.unfriend-popup {
+    display: none;
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); 
+    display: none; 
+    align-items: center; 
+    justify-content: center; 
+    border: 1px solid #3E3F3F;
+    z-index: 1000; 
+}
+
+.popup-content-unfriend {
+    background-color: #181818;
+    border-radius: 20px; 
+    text-align: center;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    width: 300px;   
+    border: 1px solid #3E3F3F;
+    max-width: 100%;  
+}
+
+.unfollow-popup {
+    display: none;
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); 
+    display: none; 
+    align-items: center; 
+    justify-content: center; 
+    border: 1px solid #3E3F3F;
+    z-index: 1000; 
+}
+
+.popup-content-unfollow {
+    background-color: #181818;
+    border-radius: 20px; 
+    text-align: center;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    width: 300px;   
+    border: 1px solid #3E3F3F;
+    max-width: 100%;  
+}
+
+.leave-popup {
+    display: none;
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); 
+    display: none; 
+    align-items: center; 
+    justify-content: center; 
+    border: 1px solid #3E3F3F;
+    z-index: 1000; 
+}
+
+.popup-content-leave {
+    background-color: #181818;
+    border-radius: 20px; 
+    text-align: center;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    width: 300px;   
+    border: 1px solid #3E3F3F;
+    max-width: 100%;  
+}
+
+.popup-overlay-friend {
+    display: none;
+    /* Ẩn popup mặc định */
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    overflow-y: auto;
+    /* Màu nền mờ */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.popup-overlay-block {
+    display: none;
+    /* Ẩn popup mặc định */
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    overflow-y: auto;
+    /* Màu nền mờ */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.friend-list {
+    margin-bottom: 5px;
+}
+
+

@@ -1,0 +1,98 @@
+
+{% extends "base/base.html" %}
+{% load static %}
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/chat.css' %}" >
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}" >
+{% endblock %}
+
+{% block title %}
+    <title>Message</title>
+{% endblock %}
+
+{% block content %} 
+<div class="home">
+    <p>
+        <span>{{ group.name }}</span>
+    </p>
+    <div class="main-container">
+        <div class="add-follow">
+            <a href="#" class="friend-profile" onclick=" openEditGroupPopup()"><b>Chỉnh sửa</b></a>
+            <a href="{% url 'invite_to_group' group.id %}" class="friend-profile"><b>Thêm thành viên</b></a>
+            <a href="#" onclick="openLeavePopup()" class="update-profile"><b class="red">Rời nhóm</b></a>
+        </div>
+        <hr class="hr">
+
+        <div id="groupleave" class="leave-popup">
+            <div class="popup-content-leave">
+                <div class="tt-luachon">
+                    <p><b>Xác nhận rời?</b></p>
+                    <p>bạn có chắc rời nhóm  <b>{{group.name}}</b></p>
+                </div>
+                <div class="luachon">
+                    <a class="button-chon" onclick="closeLeavePopup()">Không</a>
+                    <a class="button-chon" href="{% url 'leave_group' group.id %}"><b>Có</b></a>
+                </div>
+            </div>
+        </div>
+        <!--Chỉnh sửa nhóm-->
+        <div id="editGroupPopup" class="group-popup" style="display:none;">
+            <div class="popup-content-popup">
+                <form method="POST" enctype="multipart/form-data" action="{% url 'update_group' group.id %}">
+                    {% csrf_token %}
+                    <div class="popup-body">
+                        <div class="">
+                            <label for="name">Tên nhóm:</label>
+                            <input type="text" name="name" id="name" value="{{ group.name }}" required class="update-pro full-name">
+
+                        </div>
+                        <div>
+                            <input type="file" name="image" id="image" accept="image/*" style="display: none;">
+                            <label for="image" class="upload-icon">
+                                <i class="bx bx-images"></i>
+                            </label>
+                        </div>
+                                
+                        <button type="submit" class="btn-update black">Cập nhật</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="chat-container">
+            {% for message in messages %}
+                {% if message.user == request.user %}
+                <!-- Tin nhắn của bạn -->
+                <div class="message sent">
+                    <p>{{ message.content }}</p>
+                    <span class="timestamp left">{{ message.created_at|date:"H:i" }}</span>
+                </div>
+                {% else %}
+                    <!-- Tin nhắn của người khác -->
+                    <div class="message-row received">
+                        <!-- Avatar của người khác -->
+                        <div class="message-avatar">
+                            <a href="{% url 'show_profile_page' message.user.profile.id %}" style="text-decoration:none;">
+                                <img src="{{ message.user.profile.avatar.url }}" alt="Avatar" class="avatar">
+                            </a>
+                        </div>
+                        <!-- Nội dung tin nhắn -->
+                        <div class="message-content">
+                            <span>{{ message.content }}</span>
+                            <span class="timestamp">{{ message.created_at|date:"H:i" }}</span>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    
+        <form method="POST" class="form-chat" action="{% url 'send_message' group_id=group.id %}">
+            {% csrf_token %}
+            <input class="chat" name="content"></input>
+            <button type="submit" class="send-button">
+                <i class='bx bx-navigation'></i>
+            </button>
+        </form>
+    </div>
+</div>
+<script src="{% static 'js/profile.js' %}"></script>
+{% endblock %}

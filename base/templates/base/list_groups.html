@@ -1,0 +1,43 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/chat.css' %}" >
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}" >
+{% endblock %}
+
+{% block title %}
+    <title>Message</title>
+{% endblock %}
+
+{% block content %} 
+<div class="home">
+    <p>
+        Danh sách nhóm
+    </p>
+    <div class="main-container">
+        <div class="message-list">
+            <div class="message-item">
+                <a href="{% url 'create_group' %}" class="link-ct group-add friend-profile">
+                    <span>Thêm nhóm</span> 
+                    <i class='bx bx-plus'></i>
+                </a>
+
+            </div>
+            <hr class="hr">
+            {% for group in user_groups %}
+                <div class="message-item">
+                    <a href="{% url 'group_detail' group.id %}" class="link-ct">
+                        <div class="friend-info">
+                            {% if group.image %}
+                                <img src="{{ group.image.url }}" alt="{{ group.name }}" class="avatar">
+                            {% endif %}
+                            <span>{{ group.name }}</span>
+                        </div>
+                    </a>
+                </div>
+                <hr>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
